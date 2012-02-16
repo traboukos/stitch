@@ -33,6 +33,7 @@ exports.Package = class Package
   constructor: (config) ->
     @identifier   = config.identifier ? 'require'
     @paths        = config.paths ? ['lib']
+    @excludedPaths= config.excludedPaths ? []
     @dependencies = config.dependencies ? []
     @compilers    = _.extend {}, compilers, config.compilers
 
@@ -204,6 +205,10 @@ exports.Package = class Package
       callback new Error "no compiler for '.#{extension}' files"
 
   walkTree: (directory, callback) ->
+    if @excludedPaths
+      for path in @excludedPaths
+        callback() if directory.substr(-1 * path.length) == path
+
     fs.readdir directory, (err, files) =>
       return callback err if err
 
