@@ -207,7 +207,7 @@ exports.Package = class Package
   walkTree: (directory, callback) ->
     if @excludedPaths
       for path in @excludedPaths
-        callback() if directory.substr(-1 * path.length) == path
+        return callback() if directory.substr(-1 * path.length) == path
 
     fs.readdir directory, (err, files) =>
       return callback err if err
